@@ -13,19 +13,26 @@ public class App {
 		//System.out.println(convertToTitle(943566));
 		//System.out.println(reverse(-1234356789));
 		//System.out.println(egcd(35, 20));
-		Integer[] ar = {0};
+		//Integer[] ar = {0};
 		
 		//ArrayList<Integer> a = new ArrayList<Integer>();
-		ArrayList<Integer> a = new ArrayList<Integer>(Arrays.asList(ar));
+		//ArrayList<Integer> a = new ArrayList<Integer>(Arrays.asList(ar));
 		//arrange(a);
-		for (int i:a)
-			System.out.println(i);
-		System.out.println();
+		//for (int i:a)
+		//	System.out.println(i);
+		//System.out.println();
 		//System.out.println(maxval(a));
 		//a = maxset(a);
-		a = plusOne(a);
-		for (int i:a)
-			System.out.println(i);
+		//a = plusOne(a);
+		//for (int i:a)
+		//	System.out.println(i);
+		
+		ArrayList<ArrayList<Integer>> res = generate(30);
+		for (ArrayList<Integer> arr:res) {
+			for (int i:arr)
+				System.out.printf("%d ", i);
+			System.out.println();
+		}
 
 	}
 	
@@ -397,6 +404,34 @@ public class App {
 		/* If we have a leftover carry, add that to the result */
 		if (carry > 0)
 			res.add(0, carry);
+		
+		return res;
+	}
+	
+	private static ArrayList<ArrayList<Integer>> generate(int a) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+		
+		for (int i=0; i<a; i++) {
+			ArrayList<Integer> arr = new ArrayList<Integer>();
+			
+			if (i == 0) {
+				arr.add(1);
+			}
+			else if (i == 1) {
+				arr.add(1);
+				arr.add(1);
+			}
+			else {
+				arr.add(1);
+				ArrayList<Integer> prev = res.get(i - 1);
+				for (int j = 0; j < prev.size() - 1; j++) {
+					int sum = prev.get(j) + prev.get(j+1);
+					arr.add(sum);
+				}
+				arr.add(1);
+			}
+			res.add(arr);
+		}
 		
 		return res;
 	}

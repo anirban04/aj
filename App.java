@@ -13,7 +13,7 @@ public class App {
 		//System.out.println(convertToTitle(943566));
 		//System.out.println(reverse(-1234356789));
 		//System.out.println(egcd(35, 20));
-		Integer[] ar = {25150, 1412, 82797, 48381, 7065, -47699};
+		Integer[] ar = {0};
 		
 		//ArrayList<Integer> a = new ArrayList<Integer>();
 		ArrayList<Integer> a = new ArrayList<Integer>(Arrays.asList(ar));
@@ -22,7 +22,8 @@ public class App {
 			System.out.println(i);
 		System.out.println();
 		//System.out.println(maxval(a));
-		a = maxset(a);
+		//a = maxset(a);
+		a = plusOne(a);
 		for (int i:a)
 			System.out.println(i);
 
@@ -346,10 +347,63 @@ public class App {
 			}
 	}
 	
+	
+	/* Given a non-negative number represented as an array of digits,
+	 * add 1 to the number ( increment the number represented by the digits ).
+	 * The digits are stored such that the most significant digit is at the
+	 * head of the list.
+	 */
+	private static ArrayList<Integer> plusOne(ArrayList<Integer> a) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		int sum = 0;
+		int carry = 1;
+		int zCnt = -1;
+		
+
+		/* Count the leading zeroes as we do not want
+		 * to iterate over them in our main loop.
+		 */
+		for(int idx = 0; idx < a.size(); idx++) {
+			if(a.get(idx) == 0)
+				zCnt++;
+			else
+				break;
+		}
+		
+		/* Iterate over all the elements accumulating sum
+		 * and setting or clearing carry as required. 
+		 */
+		for (int i=a.size() -1; i>zCnt; i--) {
+			sum = a.get(i) + carry;
+			if (sum > 10) {
+				carry = sum/10;
+				sum = sum%10;
+			}
+			else if (sum == 10) {
+				carry = 1;
+				sum = 0;
+			}
+			else
+				carry = 0;
+		
+			/* case of either sum or carry being non zero */
+			if ((sum != 0) || (carry != 0))
+				res.add(0, sum);
+			/* case of input array containing a 0 */
+			else if ((sum == 0) && (carry == 0) && (a.get(i) == 0))
+				res.add(0, 0);
+		}
+		
+		/* If we have a leftover carry, add that to the result */
+		if (carry > 0)
+			res.add(0, carry);
+		
+		return res;
+	}
+	
 	private static int getLineNumber() {
 	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
-
 }
 
 class Res {

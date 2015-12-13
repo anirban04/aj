@@ -27,12 +27,17 @@ public class App {
 		//for (int i:a)
 		//	System.out.println(i);
 		
-		ArrayList<ArrayList<Integer>> res = generate(30);
+		/*/ArrayList<ArrayList<Integer>> res = generate(30);
 		for (ArrayList<Integer> arr:res) {
 			for (int i:arr)
 				System.out.printf("%d ", i);
 			System.out.println();
 		}
+		*/
+		ArrayList<Integer> arr =  getRow(1);
+		for (int i:arr)
+			System.out.printf("%d ", i);
+		System.out.println();
 
 	}
 	
@@ -408,32 +413,84 @@ public class App {
 		return res;
 	}
 	
+	
+	/* Given numRows, generate the first numRows of Pascal’s triangle. Pascal’s
+	 * triangle : To generate A[C] in row R, sum up A’[C] and A’[C-1] from
+	 * previous row R - 1. 
+	 */
 	private static ArrayList<ArrayList<Integer>> generate(int a) {
 		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
 		
+		/* Iterate over the length of the required result */
 		for (int i=0; i<a; i++) {
+			/* New list everytime */
 			ArrayList<Integer> arr = new ArrayList<Integer>();
 			
+			/* Handle case of first element */
 			if (i == 0) {
 				arr.add(1);
 			}
+			/* Handle case of second element */
 			else if (i == 1) {
 				arr.add(1);
 				arr.add(1);
 			}
+			/* Handle case all other elements */
 			else {
+				/* Add the first element since its always the same */
 				arr.add(1);
+				/* Get the previous ArrayList in our listofLists */
 				ArrayList<Integer> prev = res.get(i - 1);
+				/* Generate the current ArrayList */
 				for (int j = 0; j < prev.size() - 1; j++) {
 					int sum = prev.get(j) + prev.get(j+1);
 					arr.add(sum);
 				}
+				/* Add the last element since its always the same */
 				arr.add(1);
 			}
+			/* Add the generated ArrayList to our ListOfLists */
 			res.add(arr);
 		}
 		
 		return res;
+	}
+	
+	
+	/* Given an index k, return the kth row of the Pascal’s triangle.Pascal’s
+	 * triangle : To generate A[C] in row R, sum up A’[C] and A’[C-1] from 
+	 * previous row R - 1. 
+	 * NOTE : k is 0 based. k = 0, corresponds to the row [1].
+	 */
+	private static ArrayList<Integer> getRow(int a) {
+		ArrayList<Integer> cur = new ArrayList<Integer>();
+		ArrayList<Integer> prev = new ArrayList<Integer>();
+		ArrayList<Integer> temp;
+		
+		for (int i=0; i <= a; i++) {
+			/* swap references no copy needed */
+			temp = prev;
+			prev = cur;
+			cur = temp;
+			cur.clear();
+			
+			if (i == 0) {
+				cur.add(1);
+			}
+			else if (i == 1) {
+				cur.add(1);
+				cur.add(1);
+			}
+			else {
+				cur.add(1);
+				for (int j = 0; j < prev.size() - 1; j++) {
+					int sum = prev.get(j) + prev.get(j+1);
+					cur.add(sum);
+				}
+				cur.add(1);
+			}
+		}
+		return cur;
 	}
 	
 	private static int getLineNumber() {

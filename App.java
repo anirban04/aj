@@ -27,17 +27,20 @@ public class App {
 		//for (int i:a)
 		//	System.out.println(i);
 		
-		/*/ArrayList<ArrayList<Integer>> res = generate(30);
+		//ArrayList<ArrayList<Integer>> res = generate(30);
+		ArrayList<ArrayList<Integer>> res = generateMatrix(8);
 		for (ArrayList<Integer> arr:res) {
 			for (int i:arr)
-				System.out.printf("%d ", i);
+				System.out.printf("%2d ", i);
 			System.out.println();
 		}
-		*/
-		ArrayList<Integer> arr =  getRow(1);
+		
+		/*ArrayList<Integer> arr =  getRow(1);
 		for (int i:arr)
 			System.out.printf("%d ", i);
 		System.out.println();
+		*/
+		
 
 	}
 	
@@ -491,6 +494,108 @@ public class App {
 			}
 		}
 		return cur;
+	}
+	
+	/* Given an integer n, generate a square matrix
+	 * filled with elements from 1 to n2 in spiral order. 
+	 */
+	private static ArrayList<ArrayList<Integer>> generateMatrix(int a) {
+		
+		/* Init top bottom laft and right to the 4 corners */
+		int top = 0;
+		int bottom = a - 1;
+		int left = 0;
+		int right = a - 1;
+		
+		int dir = 0;
+		int cnt = 1;
+		
+		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>(a);
+		
+		/* Populate the arraylists since we will 
+		 * only be setting the elements later. 
+		 */
+		for (int i = 0; i < a; i++) {
+			ArrayList<Integer> tmp = new ArrayList<Integer>();
+			for (int j = 0; j < a; j++) {
+				tmp.add(0);
+			}
+			res.add(tmp);
+		}
+		
+		/* keep running till we have populated a^2 elements 
+		 * The (top <= bottom) && (left <= right) part is not
+		 * really needed here, since it beaks at the same time 
+		 * as (cnt <= Math.pow(a, 2)) 
+		 */
+		while ((top <= bottom) && (left <= right) && (cnt <= Math.pow(a, 2))) {
+			/* Going east */
+			if (dir == 0) {
+				/* Set the elements that are in range 
+				 * in the topmost row of the array
+				 */
+				for (int i = left; i <= right; i++) {
+					res.get(top).set(i, cnt);
+					cnt++;
+				}
+				/* Increment top since we have finished
+				 * setting all the elements in current top 
+				 */
+				top++;
+				/* Update direction to now go south */
+				dir = 1;
+			}
+			/* Going south */
+			else if (dir == 1) {
+				/* Set the elements that are in range 
+				 * in the rightmost row of the array
+				 */
+				for (int i = top; i <= bottom; i++) {
+					res.get(i).set(right, cnt);
+					cnt++;
+				}
+				/* Decrement right since we have finished
+				 * setting all the elements in current right 
+				 */
+				right--;
+				/* Update direction to now go west */
+				dir = 2;
+			}
+			/* Going west */
+			else if (dir == 2) {
+				/* Set the elements that are in range 
+				 * in the bottom most row of the array
+				 */
+				for (int i = right; i >= left; i--) {
+					res.get(bottom).set(i, cnt);
+					cnt++;
+				}
+				/* Decrement bottom since we have finished
+				 * setting all the elements in current bottom 
+				 */
+				bottom--;
+				/* Update direction to now go north */
+				dir = 3;
+			}
+			/* Going north */
+			else if (dir == 3) {
+				/* Set the elements that are in range 
+				 * in the left most row of the array
+				 */
+				for (int i = bottom; i >= top; i--) {
+					res.get(i).set(left, cnt);
+					cnt++;
+				}
+				/* Increment top since we have finished
+				 * setting all the elements in current left 
+				 */
+				left++;
+				/* Update direction to now go east */
+				dir = 0;
+			}
+
+		}
+		return res;
 	}
 	
 	private static int getLineNumber() {

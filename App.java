@@ -28,13 +28,18 @@ public class App {
 		//	System.out.println(i);
 		
 		//ArrayList<ArrayList<Integer>> res = generate(30);
-		ArrayList<ArrayList<Integer>> res = generateMatrix(8);
+		ArrayList<ArrayList<Integer>> res = generateMatrix(5);
 		for (ArrayList<Integer> arr:res) {
 			for (int i:arr)
 				System.out.printf("%2d ", i);
 			System.out.println();
 		}
-		
+		res = diagonal(res);
+		for (ArrayList<Integer> arr:res) {
+			for (int i:arr)
+				System.out.printf("%2d ", i);
+			System.out.println();
+		}
 		/*ArrayList<Integer> arr =  getRow(1);
 		for (int i:arr)
 			System.out.printf("%d ", i);
@@ -523,7 +528,8 @@ public class App {
 			res.add(tmp);
 		}
 		
-		/* keep running till we have populated a^2 elements 
+		/* Set up the traversing boundary - 
+		 * keep running till we have populated a^2 elements 
 		 * The (top <= bottom) && (left <= right) part is not
 		 * really needed here, since it beaks at the same time 
 		 * as (cnt <= Math.pow(a, 2)) 
@@ -594,6 +600,59 @@ public class App {
 				dir = 0;
 			}
 
+		}
+		return res;
+	}
+	
+	/* Give a N*N square matrix, return an array of its anti-diagonals. 
+	 * Look at the example for more details.
+	 */
+	private static ArrayList<ArrayList<Integer>> diagonal(ArrayList<ArrayList<Integer>> a) {
+		ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>(2*a.size() -1);
+	
+		/* Populate the elements of the outer ArrayList 
+		 * since we will need to get them later. */
+		for (int i=0; i<2*a.size() -1; i++) {
+			res.add(new ArrayList<Integer>());
+		}
+		
+		int resRow = 0;
+		
+		/* Set up the markers */
+		int left = 0;
+		int top = 0;
+		int right = a.size() - 1;
+		int bottom = a.size() - 1;
+
+		/* Set up the traversing boundary */
+		while(top<=bottom && left<=right) {
+			/* get an element from the input and add it to the result array. */
+			res.get(resRow).add(a.get(top).get(left));
+			
+			/* We have reached the end of one of the current traversal.
+			 * 2 possible ends need to be considered. 
+			 */
+			if ((left==0) || (top==bottom)) {
+				/* Increment the row in the result array */
+				resRow++;
+
+				if (top == bottom) {
+					left++;
+				}
+				else {
+					top++;
+				}
+				/* Backtrack to the top of the next traversal */
+				while((top!=0) && (left!=right)) {
+						top--;
+						left++;
+				}
+			}
+			/* End condition not reached - go diagonally below */
+			else {
+				top++;
+				left--;
+			}
 		}
 		return res;
 	}

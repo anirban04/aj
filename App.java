@@ -28,7 +28,7 @@ public class App {
 		//	System.out.println(i);
 		
 		//ArrayList<ArrayList<Integer>> res = generate(30);
-		ArrayList<ArrayList<Integer>> res = generateMatrix(5);
+		/*ArrayList<ArrayList<Integer>> res = generateMatrix(5);
 		for (ArrayList<Integer> arr:res) {
 			for (int i:arr)
 				System.out.printf("%2d ", i);
@@ -39,7 +39,18 @@ public class App {
 			for (int i:arr)
 				System.out.printf("%2d ", i);
 			System.out.println();
-		}
+		}*/
+		
+		ArrayList<Interval> res = new ArrayList<Interval>();
+		res.add(new Interval(1,3));
+		res.add(new Interval(8,10));
+		res = insert(res, new Interval(4, 6));
+		for (Interval i : res)
+			System.out.println("[" + i.start + ", " + i.end + "]");
+		
+		
+		
+
 		/*ArrayList<Integer> arr =  getRow(1);
 		for (int i:arr)
 			System.out.printf("%d ", i);
@@ -624,13 +635,13 @@ public class App {
 		int right = a.size() - 1;
 		int bottom = a.size() - 1;
 
-		/* Set up the traversing boundary */
+		/* Define the traversing boundary */
 		while(top<=bottom && left<=right) {
 			/* get an element from the input and add it to the result array. */
 			res.get(resRow).add(a.get(top).get(left));
 			
-			/* We have reached the end of one of the current traversal.
-			 * 2 possible ends need to be considered. 
+			/* Check if we have reached the end of one of the current
+			 * traversal. 2 possible ends need to be considered. 
 			 */
 			if ((left==0) || (top==bottom)) {
 				/* Increment the row in the result array */
@@ -657,8 +668,58 @@ public class App {
 		return res;
 	}
 	
+	/* Given a set of non-overlapping intervals, insert a new interval into
+	 * the intervals (merge if necessary). You may assume that the intervals
+	 * were initially sorted according to their start times.
+	 */
+	private static ArrayList<Interval> insert(ArrayList<Interval> 
+		intervals, Interval newInterval) {
+
+		ArrayList<Interval> res = new ArrayList<Interval>();
+
+		for (Interval i : intervals) {
+			/* new interval is non overlapping and after i */
+			if (i.end < newInterval.start) {
+				/* Add i to the result list */
+				res.add(i);
+			}
+			/* new interval is non overlapping and after the before i */
+			else if (newInterval.end < i.start) {
+				/* Add the new Interval to the result list */
+				res.add(newInterval);
+				/* Make i as the newInterval */
+				newInterval = i;
+			}
+			/* newInterval is overlapping i */
+			else if ((i.start <= newInterval.end) || (newInterval.start <= i.end)) {
+				/* Create a new Interval by merging the overlapping intervals */
+				newInterval = new Interval(Math.min(i.start, newInterval.start), Math.max(i.end, newInterval.end));
+			}
+		}
+		
+		/* Add the newInterval to the list */
+		res.add(newInterval);
+		
+		return res;
+	}
+	
 	private static int getLineNumber() {
 	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
+	}
+}
+
+class Interval {
+	int start;
+	int end;
+	
+	public Interval() {
+		start = 0;
+		end = 0;
+	}
+
+	public Interval(int start, int end) {
+		this.start = start;
+		this.end = end;
 	}
 }
 

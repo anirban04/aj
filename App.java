@@ -42,9 +42,12 @@ public class App {
 		}*/
 		
 		ArrayList<Interval> res = new ArrayList<Interval>();
-		res.add(new Interval(1,3));
-		res.add(new Interval(8,10));
-		res = insert(res, new Interval(4, 6));
+		res.add(new Interval(2,100));
+		res.add(new Interval(100,100));
+		//res.add(new Interval(8,10));
+		//res.add(new Interval(15,18));
+		//res = insert(res, new Interval(4, 6));
+		res = merge(res);
 		for (Interval i : res)
 			System.out.println("[" + i.start + ", " + i.end + "]");
 		
@@ -703,12 +706,56 @@ public class App {
 		return res;
 	}
 	
+	/* Given a collection of intervals, merge all overlapping
+	 * intervals. Make sure the returned intervals are sorted. 
+	 */
+    private static ArrayList<Interval> merge(ArrayList<Interval> intervals) {
+    	
+    	/* Sort the incoming list of intervals.
+    	 * NOTE: For this, the class interval has to implement Comparable<Interval>.
+    	 * The compareTo() method needs to be defined in it.
+    	 */
+    	Collections.sort(intervals);
+ 
+    	ArrayList<Interval> res = new ArrayList<Interval>();   	
+    	Interval prev = null;
+    	
+    	/* Iterate over the incoming list */
+    	for (Interval i : intervals) {
+    		/* non first element*/
+    		if (prev != null) {
+    			/* Check if we need to merge i with prev */
+    			if ((prev.end > i.start) || (i.start == i.end) && (prev.end == i.start)) {
+    				/* If yes, make prev as the merged interval */
+    				prev.start = Math.min(prev.start, i.start);
+    				prev.end = Math.max(prev.end, i.end);
+    			}
+    			/* If not add prev to result list and make i as prev */
+    			else {
+    				res.add(prev);
+    				prev = i;
+    			}
+    		/* first element */
+    		}
+    		else {
+    			/* If this is the first element make it prev */
+    			prev = i;
+    		}
+    	}
+    	
+    	/* finally add prev to the result list */
+    	if (prev != null)
+    		res.add(prev);
+    	
+    	return res;
+    }
+	
 	private static int getLineNumber() {
 	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
 }
 
-class Interval {
+class Interval implements Comparable<Interval> {
 	int start;
 	int end;
 	
@@ -720,6 +767,18 @@ class Interval {
 	public Interval(int start, int end) {
 		this.start = start;
 		this.end = end;
+	}
+
+	@Override
+	public int compareTo(Interval o) {
+		Interval i = (Interval)o;
+		if (this.start < i.start) {
+			return -1;
+		}
+		else if (this.start > i.start) {
+			return 1;
+		}
+		else return 0;
 	}
 }
 

@@ -39,7 +39,7 @@ public class App {
 			for (int i:arr)
 				System.out.printf("%2d ", i);
 			System.out.println();
-		}*/
+		}
 		
 		ArrayList<Interval> res = new ArrayList<Interval>();
 		res.add(new Interval(2,100));
@@ -50,15 +50,32 @@ public class App {
 		res = merge(res);
 		for (Interval i : res)
 			System.out.println("[" + i.start + ", " + i.end + "]");
+		*/
 		
-		
-		
-
 		/*ArrayList<Integer> arr =  getRow(1);
 		for (int i:arr)
 			System.out.printf("%d ", i);
 		System.out.println();
 		*/
+		
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		//res.add(3);
+		//res.add(30);
+		//res.add(34);
+		//res.add(5);
+		//res.add(9);
+		res.add(5);
+		res.add(1);
+		res.add(3);
+		res.add(2);
+		res.add(4);
+		for (Integer i : res)
+			System.out.println(i);
+		//System.out.println(largestNumber(res));
+		System.out.println();
+		res = wave(res);
+		for (Integer i : res)
+			System.out.println(i);
 		
 
 	}
@@ -749,6 +766,73 @@ public class App {
     	
     	return res;
     }
+    
+    /* Given a list of non negative integers, arrange 
+     * them such that they form the largest number. 
+     */
+	private static String largestNumber(final List<Integer> a) {
+		ArrayList<String> list = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+	
+		/* Convert all elements to strings 
+		 * and add to list of string 
+		 */
+		for (Integer i:a)
+			list.add(i.toString());
+				
+		/* Define a comparator to compare strings by
+		 * concat() right-to-left or left-to-right.
+		 * Return reverse order. 
+		 */
+		Collections.sort(list, new Comparator<String>(){
+			public int compare(String s1, String s2) {
+				String leftRight = s1+s2;
+				String rightLeft = s2+s1;
+				return -leftRight.compareTo(rightLeft);
+			}
+		});
+		
+		/* Append to string builder object */
+		for (String s : list)
+			sb.append(s);
+		
+		/* Handle case of all zero array by removing all but 1 zeroes */
+		int len = sb.length();
+		for (int i = 0; i < len - 1; i++) {
+			if (sb.charAt(0) == '0')
+				sb.deleteCharAt(0);
+		}
+
+		return sb.toString();
+	}
+	
+	
+	/* Given an array of integers, sort the array 
+	 * into a wave like array and return it.
+	 */
+	private static ArrayList<Integer> wave(ArrayList<Integer> a) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		
+		/* Sort the input ArrayList */
+		Collections.sort(a);
+		
+		/* Create a result array list, retrieve elements from the sorted
+		 * in an alternate manner and add them to the result list. 
+		 */
+		for (int i = 0; i <  a.size() - 1; i = i+2) {
+			int j = i+1;
+			res.add(a.get(j));
+			res.add(a.get(i));
+		}
+		
+		/* If the input list had odd number of elements, retrieve the
+		 * last element from the input list and add to the result list.
+		 */
+		if (a.size()%2 > 0)
+			res.add(a.get(a.size() - 1));
+		
+		return res;
+	}
 	
 	private static int getLineNumber() {
 	    return Thread.currentThread().getStackTrace()[2].getLineNumber();

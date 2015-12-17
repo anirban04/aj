@@ -57,6 +57,7 @@ public class App {
 			System.out.printf("%d ", i);
 		System.out.println();
 		*/
+		System.out.println(isStrPalindrome("1a1"));
 		
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		//res.add(3);
@@ -82,7 +83,7 @@ public class App {
 		//for (Integer i : res)
 		//	System.out.println(i);
 		
-		System.out.println(uniquePaths(15,9));
+		//System.out.println(uniquePaths(15,9));
 	}
 	
 	
@@ -910,6 +911,26 @@ public class App {
 		for (int i = 0; i < size; i++) {
 			a.set(i, a.get(i) / size);
 		}
+	}
+	
+	private static int isStrPalindrome(String a) {
+		
+		/* Handle the case of null string */
+		if (a == null)
+			return 0;
+
+		/* Convert to lower */
+		a = a.toLowerCase();
+		/* Remove all non alphanumeric values from string */
+		a = a.replaceAll("[^a-z0-9]+", "");
+		/* Create string builder with our string */
+		StringBuilder sb = new StringBuilder(a);
+		/* reverse using string builder method */
+		sb = sb.reverse();
+		/* check if reversed string == input string */
+		if(sb.toString().equals(a))
+			return 1;
+		return 0;
 	}
 	
 	/* Number of unique paths in a AxB grid */

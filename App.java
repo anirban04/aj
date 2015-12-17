@@ -64,20 +64,25 @@ public class App {
 		//res.add(34);
 		//res.add(5);
 		//res.add(9);
-		res.add(5);
-		res.add(1);
 		res.add(3);
 		res.add(2);
-		res.add(4);
-		for (Integer i : res)
+		res.add(0);
+		res.add(1);
+		//for (Integer i : res)
+		//	System.out.println(i);
+		/*for (Integer i : res)
 			System.out.println(i);
-		//System.out.println(largestNumber(res));
 		System.out.println();
 		res = wave(res);
 		for (Integer i : res)
 			System.out.println(i);
+		*/
+		//System.out.println("first missing = " + firstMissingPositive(res));
+		//arrange(res);
+		//for (Integer i : res)
+		//	System.out.println(i);
 		
-
+		System.out.println(uniquePaths(15,9));
 	}
 	
 	
@@ -832,6 +837,108 @@ public class App {
 			res.add(a.get(a.size() - 1));
 		
 		return res;
+	}
+	
+	/* Given an unsorted integer array, find 
+	 * the first missing positive integer. 
+	 */
+	private static int firstMissingPositive(ArrayList<Integer> a) {
+		int partition = a.size() - 1;
+		int idx;
+		
+		/* Partition the array such that all -ve 
+		 * numbers are to the right end of it. 
+		 */
+		for (int i = partition; i >= 0; i--) {
+			int val = a.get(i);
+			if (val < 0) {
+				int swpVal = a.get(partition);
+				a.set(partition, val);
+				a.set(i, swpVal);
+				partition--;
+			}
+		}
+		
+		/* On the left part, check every element, if it lies within [1 and N] 
+		 * (both incl) then, get the prev element in the list and replace
+		 * it with its negative value.
+		 */
+		for (int i = 0; i <= partition; i++) {
+			int val = a.get(i);
+			val = Math.abs(val);
+			if ((val > 0) && (val <= partition+1)) {
+			    int index = val - 1;
+			    int num = a.get(index);
+				a.set(index, -num);
+			}
+		}
+		
+		/* Iterate thru the array and for the first positive value return the 
+		 * nextIndex + 1 
+		 */
+		for (idx = 0; idx <= partition; idx++) {
+			if (a.get(idx) >= 0)
+				return idx+1;
+		}
+		
+		/* Handle case of all elements correct so N+1th index will be returned */
+		return idx+ 1;
+	}
+
+	/* Rearrange a given array so that Arr[i] becomes
+	 * Arr[Arr[i]] with O(1) extra space. 
+	 */
+	private static void arrange(ArrayList<Integer> a) {
+		int size = a.size();
+		int arrI;
+		int arrArrI;
+		int setVal;
+		
+		/* Set every element in the arrayList as 
+		 * arr[i] = arr[i] + (arr[arr[i]]%n)*n 
+		 */
+		for (int i = 0; i < size; i++) {
+			arrI = a.get(i);
+			arrArrI = a.get(arrI);
+			setVal = arrI + (arrArrI%size) * size;
+			a.set(i, setVal);
+		}
+		
+		/* set every element in the arrayList as 
+		 * arr[i] = arr[i] / N
+		 */
+		for (int i = 0; i < size; i++) {
+			a.set(i, a.get(i) / size);
+		}
+	}
+	
+	/* Number of unique paths in a AxB grid */
+	private static int uniquePaths(int a, int b) {
+	    
+		/* Handle the case of only one row or col */
+	    if ((a == 1) || (b == 1))
+	        return 1;
+
+	    /* The total possible ways is 
+	     * (a-1) for one way + (b-1) for other way  = a+b-2 */
+	    int total = a+b-2;
+	    int right = a-1;
+	    
+	    /* Number of paths is = Choose (a - 1) on one way 
+	     * out of (a+b-2) total = (a+b-2) C (a-1). This number
+	     * may overflow and therefore use a double to hold it. 
+	     */
+	    double paths = fact(total)/(fact(right) * fact(b - 1));
+	    return (int)paths;
+	}
+
+	private static double fact(double n) {
+	    if (n == 1) {
+	        return 1;
+	    }
+	    else {
+	        return n * fact (n - 1);
+	    }
 	}
 	
 	private static int getLineNumber() {

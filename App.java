@@ -57,18 +57,18 @@ public class App {
 			System.out.printf("%d ", i);
 		System.out.println();
 		*/
-		System.out.println(isStrPalindrome("1a1"));
+		//System.out.println(isStrPalindrome("1a1"));
 		
-		ArrayList<Integer> res = new ArrayList<Integer>();
+		//ArrayList<Integer> res = new ArrayList<Integer>();
 		//res.add(3);
 		//res.add(30);
 		//res.add(34);
 		//res.add(5);
 		//res.add(9);
-		res.add(3);
-		res.add(2);
-		res.add(0);
-		res.add(1);
+		//res.add(3);
+		//res.add(2);
+		//res.add(0);
+		//res.add(1);
 		//for (Integer i : res)
 		//	System.out.println(i);
 		/*for (Integer i : res)
@@ -84,6 +84,17 @@ public class App {
 		//	System.out.println(i);
 		
 		//System.out.println(uniquePaths(15,9));
+		/*
+		ArrayList<String> strLst= new ArrayList<String>();
+		strLst.add("aaaaaaaaaaaaaaa"); 
+		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); 
+		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		strLst.add("aaaaaaaaaaaaaa");
+		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		System.out.println(longestCommonPrefix(strLst));*/
+		System.out.println(lengthOfLastWord("Hello World"));
 	}
 	
 	
@@ -931,6 +942,69 @@ public class App {
 		if(sb.toString().equals(a))
 			return 1;
 		return 0;
+	}
+	
+	/* Write a function to find the longest common 
+	 * prefix string amongst an array of strings. 
+	 */
+	private static String longestCommonPrefix(ArrayList<String> a) {
+		/* Handle the case of the null string */
+		if (a.size() == 0)
+			return null;
+		
+		String str = a.get(0);
+		int min = str.length();
+		int len;
+		/* Determine the shortest string in the list of strings */
+		for (String s : a) {
+			if ((len = s.length()) < min) {
+				min = len;
+				str = s;
+			}
+		}
+			
+		/* Iterate till the length of the shortest string and 
+		 * for every value of length compare the character (at
+		 * that index) between the shortest string and every 
+		 * string in the list. If they do not match return the 
+		 * substring till the last matching length.  
+		 */
+		for (len = 0; len < min; len++) {
+			char c1 = str.charAt(len);
+			for (String s1 : a) {
+				char c2 = s1.charAt(len);
+				if (c1 != c2) {
+					return (str.substring(0, len));
+				}
+			}
+		}
+
+		/* If the entire shortest string is a substring 
+		 * in all other strings return it. 
+		 */
+		return str;
+	}
+	
+	/* Given a string s consists of upper/lower-case alphabets 
+	 * and empty space characters ' ', return the length of 
+	 * last word in the string. If the last word does not exist,
+	 * return 0.
+	 */
+	private static int lengthOfLastWord(final String a) {
+
+		/* Handle the case of a null string */
+		if (a == null)
+			return 0;
+		
+		/* Split the string into an array of 
+		 * strings using regex split("[^a-zA-Z]")  
+		 */
+		String[] strArr = a.split("[^a-zA-Z]");
+		/* Handle the case of a a string with only spaces */
+		if (strArr.length == 0)
+			return 0;
+		/* return the length of the last array element */
+		return strArr[strArr.length - 1].length();
 	}
 	
 	/* Number of unique paths in a AxB grid */

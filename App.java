@@ -94,7 +94,8 @@ public class App {
 		strLst.add("aaaaaaaaaaaaaa");
 		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		System.out.println(longestCommonPrefix(strLst));*/
-		System.out.println(lengthOfLastWord("Hello World"));
+		//System.out.println(lengthOfLastWord("Hello World"));
+		System.out.println(strStr("Anirban", "ban"));
 	}
 	
 	
@@ -942,6 +943,14 @@ public class App {
 		if(sb.toString().equals(a))
 			return 1;
 		return 0;
+	}
+	
+	private static int strStr(final String haystack, final String needle) {
+		if ((haystack == null) || (needle == null))
+			return -1;
+		
+		return haystack.indexOf(needle);
+		
 	}
 	
 	/* Write a function to find the longest common 

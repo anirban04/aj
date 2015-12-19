@@ -95,7 +95,8 @@ public class App {
 		strLst.add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		System.out.println(longestCommonPrefix(strLst));*/
 		//System.out.println(lengthOfLastWord("Hello World"));
-		System.out.println(strStr("Anirban", "ban"));
+		//System.out.println(strStr("Anirban", "ban"));
+		System.out.println(atoi("-54332872018247709407 4 54"));
 	}
 	
 	
@@ -952,6 +953,73 @@ public class App {
 		return haystack.indexOf(needle);
 		
 	}
+	
+	/* atoi with a lot of corner cases */
+	private static int atoi(final String a) {
+		/* Handle the case of a null string */
+		if (a == null)
+			return 0;
+		
+		int neg = 1;
+		int idx = 0;
+		int res = 0;
+		long ovfChk = 0;
+
+		/* Skip all the whitespaces at the start */
+		while(a.charAt(idx) == ' ')
+			idx++;
+		
+		/* Check for the sign if present */
+		if ((a.charAt(idx) == '-') || (a.charAt(idx) == '+')) {
+			if (a.charAt(idx) == '-')
+				neg = -1;
+			idx++;
+		}
+
+		res = a.charAt(idx);
+		
+		/* Check if the character after the sign is a number. 
+		 * If not, return 0.
+		 */
+		if (! ((res > 47) && (res < 58)))
+			return 0;
+		
+		/* Now we have all the info except the number string. To,
+		 * get it, split the string with the regex split("[^0-9]").
+		 */
+		String[] strArr = a.split("[^0-9]");
+		/* Iterate through the split result array */
+		for (String s : strArr) {
+			/* Skip the dumb "" strings that split adds to the array */
+			if (!(s.equals(""))) {
+				long ret = 0;
+				/* The array only contains "" and number strings, so once
+				 * you skip the "", only number strings are left. Start
+				 * converting character by character to number using
+				 * (10 * ret) + (s.charAt(i) - 48). Keep ret as a double
+				 * so that you can check for overflows on both sides.
+				 * Keep in mind that face value of MAX is one lesser than
+				 * MIN. So checks are independent. Keep accumulating, till
+				 * there is overflow or all number characters are over.
+				 * Return result.
+				 */
+				for (int i = 0; i < s.length(); i++) {
+					ovfChk = (10 * ret) + (s.charAt(i) - 48);
+					
+					if ((neg == -1) && (ovfChk - 1 > Integer.MAX_VALUE))
+						return Integer.MIN_VALUE;
+					else if ((neg == 1) && (ovfChk > Integer.MAX_VALUE))
+						return Integer.MAX_VALUE;
+					else
+						ret = ovfChk;
+				}
+				
+				return neg * (int)ret;
+			}
+		}
+		return 0;
+	}
+
 	
 	/* Write a function to find the longest common 
 	 * prefix string amongst an array of strings. 

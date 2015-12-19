@@ -96,7 +96,8 @@ public class App {
 		System.out.println(longestCommonPrefix(strLst));*/
 		//System.out.println(lengthOfLastWord("Hello World"));
 		//System.out.println(strStr("Anirban", "ban"));
-		System.out.println(atoi("-54332872018247709407 4 54"));
+		//System.out.println(atoi("-54332872018247709407 4 54"));
+		System.out.println(romanToInt("aaaXaaaVaaaX"));
 	}
 	
 	
@@ -1020,6 +1021,53 @@ public class App {
 		return 0;
 	}
 
+	/* Roman to int */
+	private static int romanToInt(String a) {
+		HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+		int res = 0;
+
+		/* Insert the character number mappings into a hashmap */
+		map.put('I', 1);
+		map.put('V', 5);
+		map.put('X', 10);
+		map.put('L', 50);
+		map.put('C', 100);
+		map.put('D', 500);
+		map.put('M', 1000);
+		
+		/* Get the clean roman numeral into a string */
+		String[] strArr = a.split("[^IVXLCDM]+");
+		StringBuffer sb = new StringBuffer();
+		String roman;
+		for (String s : strArr) {
+			if (!s.matches("")) {
+				sb.append(s);
+			}
+		}
+		
+		roman = sb.toString();
+		
+		/* Iterate through the string with cur and nxt. If char at cur is
+		 * less than nxt then add  (nxt - cur) to the accumulated res and 
+		 * increment the iterating pointer by 1; else, add cur to the 
+		 * accumulated value.
+		 */
+		for (int i = 0; i < roman.length(); i++) {
+			int cur, nxt;
+			cur = map.get(roman.charAt(i));
+			if (i + 1 < roman.length())
+				nxt = map.get(roman.charAt(i + 1));
+			else
+				nxt = 0;
+			if (cur >= nxt)
+				res+=cur;
+			else {
+				res+=(nxt - cur);
+				i++;
+			}
+		}
+		return res;
+	}
 	
 	/* Write a function to find the longest common 
 	 * prefix string amongst an array of strings. 

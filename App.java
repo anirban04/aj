@@ -97,10 +97,18 @@ public class App {
 		//System.out.println(lengthOfLastWord("Hello World"));
 		//System.out.println(strStr("Anirban", "ban"));
 		//System.out.println(atoi("-54332872018247709407 4 54"));
-		System.out.println(romanToInt("aaaXaaaVaaaX"));
+		//System.out.println(romanToInt("aaaXaaaVaaaX"));
+		String[] arr = {"What", "must", "be", "shall", "be."};
+		//String[] arr = {"glu", "muskzjyen", "fxjlzekp", "uvdaj", "ua", "pzagn", "bjffryz", "nkdd", "osrownxj", "fvluvpdj", "kkrpr", "khp", "eef", "aogrl", "gqfwfnaen", "qhujt", "vabjsmj", "ji", "f", "opihimudj", "awi", "jyjlyfavbg", "tqxupaaknt", "dvqxay"};
+		ArrayList<String> res = new ArrayList<String>();
+		for (int i = 0; i < arr.length; i++)
+			res.add(arr[i]);
+		
+		res = fullJustify(res, 12);
+		for (String s : res)
+			System.out.println(s);
 	}
-	
-	
+
 	/* Each pair of 2 and 5 will cause a trailing zero.
 	 *  Since we have only 24 5’s, we can only make 24 
 	 *  pairs of 2’s and 5’s thus the number of 
@@ -1164,7 +1172,84 @@ public class App {
 	private static int getLineNumber() {
 	    return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
-}
+	
+	/* Given an array of words and a length L, format the text such that each
+	 * line has exactly L characters and is fully (left and right) justified.
+	 * You should pack your words in a greedy approach; that is, pack as many
+	 * words as you can in each line.*/
+	private static ArrayList<String> fullJustify(ArrayList<String> a, int b) {
+		ArrayList<String> res = new ArrayList<String>();
+		int len = 0;
+		int idx = 0;
+		
+		/* Keep running till input arrayList is empty */
+		while(!a.isEmpty()) {
+			/* Handle the case of the last line */
+			if (idx >= a.size()) {
+				StringBuilder sb = new StringBuilder();
+				/* Add all the words left in the 
+				 * ArrayList, We know it will fit.
+				 */
+				while(!a.isEmpty()) {
+					sb.append(a.remove(0));
+					sb.append(" ");
+				}
+				/* Delete the last trailing space */
+				sb.delete(sb.length() -1, sb.length());
+				/* Add the line to the result arrayList */
+				res.add(sb.toString());
+			}
+			/* Handle the case of any other than last line */
+			else {
+				len += a.get(idx).length() + 1;
+				if ((b + 1) >= len)
+					idx++;
+				else {
+					StringBuilder sb = new StringBuilder();
+					len -= (a.get(idx).length() + 1);
+					/* We are sure we have overshot, so reduce the number
+					 * of words we are using for this line by one */
+					idx--;
+					/* Calculate how many extra spaces need to be padded */
+					int diff = (b) - len;
+					int space = 0;
+					/* Case of num extra spaces > num slots between words */
+					if (diff > idx) {
+						if (idx > 0) {
+							space = diff/idx;
+							diff = diff%idx;
+						}
+						/* Case of num extra spaces < num 
+						 * slots between words */
+						else {
+							space = diff;
+							diff = 0;
+						}
+					}
+					/* Add the words to the line */
+					for (int j = 0; j <= idx; j++) {
+						sb.append(a.remove(0));
+						sb.append(" ");
+						/* Add all the required extra space after every word */
+						for (int i = 0; i < space; i++)
+							sb.append(" ");
+						if (diff > 0) {
+							sb.append(" ");
+							diff--;
+						}
+					}
+					/* Delete the last trailing space */
+					sb.delete(sb.length() -1, sb.length());
+					/* Add the string to the result arrayList */
+					res.add(sb.toString());
+					len = 0;
+					idx = 0;
+				}
+			}
+		}
+		return res;
+	}
+}   
 
 class Interval implements Comparable<Interval> {
 	int start;
@@ -1203,3 +1288,4 @@ class Res {
 		sum = -1 * Integer.MAX_VALUE;
 	}
 }
+

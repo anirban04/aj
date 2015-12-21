@@ -100,13 +100,15 @@ public class App {
 		//System.out.println(romanToInt("aaaXaaaVaaaX"));
 		String[] arr = {"What", "must", "be", "shall", "be."};
 		//String[] arr = {"glu", "muskzjyen", "fxjlzekp", "uvdaj", "ua", "pzagn", "bjffryz", "nkdd", "osrownxj", "fvluvpdj", "kkrpr", "khp", "eef", "aogrl", "gqfwfnaen", "qhujt", "vabjsmj", "ji", "f", "opihimudj", "awi", "jyjlyfavbg", "tqxupaaknt", "dvqxay"};
-		ArrayList<String> res = new ArrayList<String>();
+		/*ArrayList<String> res = new ArrayList<String>();
 		for (int i = 0; i < arr.length; i++)
 			res.add(arr[i]);
 		
 		res = fullJustify(res, 12);
 		for (String s : res)
-			System.out.println(s);
+			System.out.println(s);*/
+		
+		System.out.println(longestPalindrome("aaaabaaa"));
 	}
 
 	/* Each pair of 2 and 5 will cause a trailing zero.
@@ -1248,6 +1250,115 @@ public class App {
 			}
 		}
 		return res;
+	}
+	
+	/* Given a string S, find the longest palindromic substring in S. */
+	private static String longestPalindrome1(String a) {
+		
+		/* Handle the case of a null input */
+		if (a == null)
+			return null;
+		
+		/* Handle the case of a string of length 1 */
+		if (a.length() == 1)
+			return a;
+
+		String longPal = null;
+		int stIdx = Integer.MAX_VALUE;
+
+		/* Iterate over the string. At every index make strings 
+		 * of all possible lengths and check for palindromes. */
+		for (int i = 0; i <= a.length(); i++) {
+			for (int j = i+1; j <= a.length(); j++) {
+				String suba = a.substring(i, j);
+				StringBuilder sb = new StringBuilder(suba);
+				String subRev = sb.reverse().toString();
+				if ((suba.equals(subRev)) && 
+						/* If palindrome found, check whether
+						 * longer than prev found ones. If same
+						 * length palin found, check is start
+						 * index is lower for this palin. */
+						((longPal == null)  || 
+						(suba.length() > longPal.length()) || 
+						((suba.length() == longPal.length()) && 
+								(i < stIdx)))) {
+						longPal = suba;
+						stIdx = i;	
+				}
+			}
+		}
+		return longPal;
+	}
+	
+	/* Given a string S, find the longest palindromic substring in S. */
+	private static String longestPalindrome(String a) {
+		
+		int maxSize = 0;
+		int maxIdx = 0;
+		int beginIdx, endIdx;
+		/* Allocate an array to hold all the characters 
+		 * as well as the spaces between them */
+		int[] len = new int[2 * a.length() - 1];
+		
+		/* Iterate over this array */
+		for (int i = 0; i < len.length; i++) {
+			int cnt,idx,left,right;
+			/* Case of a character */
+			if (i % 2 == 0) {
+				/* Minimum palindrome will
+				 * be the character itself */
+				cnt = 1;
+				/* Compute the index into the string for this */
+				idx = i / 2;
+				/* Compute the left index or comparison */
+				left = idx - 1;
+			}
+			/* Case of a space */
+			else {
+				/* Minimum palindrome will be 0 in this 
+				 * case, since its the space between chars. */
+				cnt = 0;
+				/* Get the index into the string for this */
+				idx = (i - 1) / 2;
+				/* Compute the left index or comparison */
+				left = idx;
+			}
+			/* Compute the right index or comparison */
+			right = idx + 1;
+			/* Run through the left and right 
+			 * comparisons till a mismatch is found */
+			while ((left >= 0) && (right < a.length())) {
+				if (a.charAt(left) ==  a.charAt(right)) {
+					/* For each successful comparison bump
+					 * up the size of palindrome by 2 */
+					cnt+=2;
+				}
+				else
+					break;
+				/* Move out by one */
+				left--;
+				right++;
+			}
+			/* Update palindrome index if we
+			 * just found a longer palindrome */
+			len[i] =  cnt;
+			if (len[i] > maxSize) {
+				maxSize = len[i];
+				maxIdx= i;
+			}
+		}
+		
+		/* Compute the palindrome start index in the actual string */
+		if (maxIdx % 2 > 0) {
+			beginIdx = ((maxIdx - 1) / 2) - maxSize/2 + 1;
+		}
+		else {
+			beginIdx = maxIdx/2 - ((maxSize - 1) / 2);
+		}
+		/* Compute the palindrome end index in the actual string */
+		endIdx = beginIdx + maxSize;
+		/* return the palindrome substring */
+		return a.substring(beginIdx, endIdx);
 	}
 }   
 

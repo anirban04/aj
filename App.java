@@ -110,7 +110,7 @@ public class App {
 		
 		//System.out.println(longestPalindrome("aaaabaaa"));
 		//System.out.println(convert("ABCDEFG", 3));
-		nQueens(10);
+		nQueens(29);
 	}
 
 	/* Each pair of 2 and 5 will cause a trailing zero.
@@ -1442,7 +1442,7 @@ public class App {
 		// we have reached the end of the board.
 		if (col >= boardSize)
 			return true;
-		//For a given input col, iterate over all the rows to find a right box
+		//For the given input col, iterate over all the rows to find a right box
 		for (int i = 0; i < boardSize; i++) {
 			if (isBoxValid(board, i, col, boardSize)) {
 				// If a valid box is found place a queen there

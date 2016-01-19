@@ -98,7 +98,7 @@ public class App {
 		//System.out.println(strStr("Anirban", "ban"));
 		//System.out.println(atoi("-54332872018247709407 4 54"));
 		//System.out.println(romanToInt("aaaXaaaVaaaX"));
-		String[] arr = {"What", "must", "be", "shall", "be."};
+		//String[] arr = {"What", "must", "be", "shall", "be."};
 		//String[] arr = {"glu", "muskzjyen", "fxjlzekp", "uvdaj", "ua", "pzagn", "bjffryz", "nkdd", "osrownxj", "fvluvpdj", "kkrpr", "khp", "eef", "aogrl", "gqfwfnaen", "qhujt", "vabjsmj", "ji", "f", "opihimudj", "awi", "jyjlyfavbg", "tqxupaaknt", "dvqxay"};
 		/*ArrayList<String> res = new ArrayList<String>();
 		for (int i = 0; i < arr.length; i++)
@@ -108,7 +108,9 @@ public class App {
 		for (String s : res)
 			System.out.println(s);*/
 		
-		System.out.println(longestPalindrome("aaaabaaa"));
+		//System.out.println(longestPalindrome("aaaabaaa"));
+		//System.out.println(convert("ABCDEFG", 3));
+		nQueens(10);
 	}
 
 	/* Each pair of 2 and 5 will cause a trailing zero.
@@ -1360,6 +1362,127 @@ public class App {
 		/* return the palindrome substring */
 		return a.substring(beginIdx, endIdx);
 	}
+	
+	/* The string "PAYPALISHIRING" is written in a zigzag pattern on
+	 * a given number of rows. Write the code that will take a string
+	 * and make this conversion given a number of rows: */
+	private static String convert(String a, int b) {
+		ArrayList<StringBuilder> arr = new ArrayList<StringBuilder>();
+		for (int i = 0; i < b; i++)
+			arr.add(new StringBuilder());
+		
+		arr.get(0).append(a.charAt(0));
+
+		int dir = 0;
+		int cursor = 1;
+		int top = 0;
+		int bottom = b - 1;
+		for (int i = 1; i < a.length(); i++) {
+			if (dir == 0) {
+				if(cursor <= bottom) {
+					arr.get(cursor).append(a.charAt(i));
+					cursor++;
+				}
+				//for (StringBuilder sb : arr)
+					//System.out.println(sb.toString());
+				dir = 1;
+				cursor--;
+			}
+			else {
+				if(cursor >= top) {
+					arr.get(cursor).append(a.charAt(i));
+					cursor--;
+				}
+				//for (StringBuilder sb : arr)
+					//System.out.println(sb.toString());
+				dir = 0;
+				cursor++;
+			}
+		}
+		
+		String ret = "";
+		for (StringBuilder sb : arr) {
+			System.out.println(sb.toString());
+			ret += sb.toString();
+		}
+		
+		return ret;
+	}
+//------------------------
+	private static boolean isBoxValid(int [][] board, 
+			int row, int col, int boardSize) {
+		
+		// We place a new queen to the right (next col) of an older queen, 
+		// and also in one column, we only place a single queen. So the
+		// following are the only cases that we need to consider for the 
+		//validation of a bueen placement.
+		
+		//Check for any elements on straight left
+		for (int j = 0; j < col; j++) {
+			if (board[row][j] == 1)
+				return false;
+		}
+		//Check for any elements on diagonal up left
+		for (int i = row, j = col; i >=0  && j>=0; i--, j--) {
+			if (board[i][j] == 1)
+				return false;
+		}
+		//Check for any elements on diagonal down left
+		for (int i = row, j = col; i < boardSize  && j>=0; i++, j--) {
+			if (board[i][j] == 1)
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private static boolean placeQueens(int [][] board, int col, int boardSize) {
+		
+		// Base case for recursion to break. if 
+		// we have reached the end of the board.
+		if (col >= boardSize)
+			return true;
+		//For a given input col, iterate over all the rows to find a right box
+		for (int i = 0; i < boardSize; i++) {
+			if (isBoxValid(board, i, col, boardSize)) {
+				// If a valid box is found place a queen there
+				board[i][col] = 1;
+				// Then call recursively for next col
+				if (placeQueens(board, col+1, boardSize))
+					return true;
+				//This is where we backtrack
+				board[i][col] = 0;
+			}
+		}
+		
+		//If we have gone through all rows, then queen cannot be placed
+		return false;
+	}
+	
+	private static void printPlacement(int [][] board, int boardSize) {
+		for (int i = 0; i < boardSize; i++) {
+			for (int j = 0; j < boardSize; j++) {
+				System.out.printf("%d  ", board[i][j]);
+			}
+			System.out.printf("\n");
+		}
+	}
+	
+	private static void nQueens(int numQueens) {
+
+		//Create a 2 dimensional array to hold the board
+		int [][] board = new int[numQueens][numQueens];
+		
+		//place all the queens
+		if (placeQueens(board, 0, numQueens))
+			//print the placement
+			printPlacement(board, numQueens);
+		else
+			System.out.println("Solution not found.");
+	}
+	
+//------------------------
+
 }   
 
 class Interval implements Comparable<Interval> {

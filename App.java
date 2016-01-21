@@ -110,10 +110,10 @@ public class App {
 		
 		//System.out.println(longestPalindrome("aaaabaaa"));
 		//System.out.println(convert("ABCDEFG", 3));
-		nQueens(29);
+		//nQueens(29);
 		
 		//------------
-		/*int [][] graphAdjMat = {{0, 1, 1, 1},
+		int [][] graphAdjMat = {{0, 1, 1, 1},
 					   			{1, 0, 1, 0},
 					   			{1, 1, 0, 1},
 					   			{1, 0, 1, 0}};
@@ -123,12 +123,12 @@ public class App {
 			System.out.println("Cannot Color the graph");
 		else {
 			System.out.println("Colors are: ");
-			for (int i = 0; i < graphColor.numVertices; i++)
+			for (int i = 0; i < graphAdjMat.length; i++)
 				System.out.printf("%d ",graphColor.color[i]);
 			System.out.printf("\n");
 		}
 		
-		KnightTour knighttour = new KnightTour(8);
+		/*KnightTour knighttour = new KnightTour(8);
 		int [][] sol = knighttour.getKnightsPath();
 		
 		for (int i = 0; i < 8; i++) {
@@ -1513,30 +1513,24 @@ class GraphColor {
 	
 	int [][] graphAdjMat;
 	int[] color;
-	int numVertices;
 	int numColors;
-	boolean graphColored;
 	
 	
 	public GraphColor(int[][] graphAdjMat, int numColors) {
 		this.graphAdjMat = graphAdjMat;
-		this.numVertices = graphAdjMat.length;
-		this.color = new int[this.numVertices];
+		this.color = new int[graphAdjMat.length];
 		this.numColors = numColors;	
-		this.graphColored = false;
 	}
 	
 	public boolean colorGraph() {
-		solve(0);
-		return this.graphColored;
+		return solve(0);
 	}
 	
 	//This is the main helper method that solves the coloring problem
-	private void solve(int vertexIdx) {
+	private boolean solve(int vertexIdx) {
 		//Base case - return if we have colored all vertices
-		if (vertexIdx == numVertices) {
-			this.graphColored = true;
-			return;
+		if (vertexIdx == graphAdjMat.length) {
+			return true;
 		}
 		
 		//For a given vertex, iterate through all colors to find the first one that is Valid
@@ -1545,14 +1539,18 @@ class GraphColor {
 				//Assign color to vertex
 				color[vertexIdx] = i;
 				//Recursively color the next vertex
-				solve(vertexIdx + 1);
+				if (solve(vertexIdx + 1))
+					return true;
+				//Backtrack if next vertex cannot be colored
+				color[vertexIdx] = 0;
 			}	
 		}
+		return false;
 	}
 	
 	//Helper function to check if a color is valid
 	private boolean isColorValid(int vertexIdx, int toColor) {
-		for (int i = 0; i < numVertices; i++) {
+		for (int i = 0; i < graphAdjMat.length; i++) {
 			//Check if a neighbor has the same color assigned
 			if (graphAdjMat[vertexIdx][i] == 1 && (color[i] == toColor))
 				return false;

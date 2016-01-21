@@ -113,7 +113,7 @@ public class App {
 		//nQueens(29);
 		
 		//------------
-		int [][] graphAdjMat = {{0, 1, 1, 1},
+		/*int [][] graphAdjMat = {{0, 1, 1, 1},
 					   			{1, 0, 1, 0},
 					   			{1, 1, 0, 1},
 					   			{1, 0, 1, 0}};
@@ -128,7 +128,7 @@ public class App {
 			System.out.printf("\n");
 		}
 		
-		/*KnightTour knighttour = new KnightTour(8);
+		KnightTour knighttour = new KnightTour(8);
 		int [][] sol = knighttour.getKnightsPath();
 		
 		for (int i = 0; i < 8; i++) {
@@ -137,6 +137,14 @@ public class App {
 			}
 			System.out.printf("\n");
 		}*/
+		
+		int [][] maze = {{1, 1, 1, 1},
+	   					 {0, 0, 1, 0},
+	   					 {1, 0, 1, 1},
+	   					 {1, 1, 1, 0}};
+		MazeSolver mSol = new MazeSolver(maze);
+		mSol.printPath(0, 0, 2, 0);
+		
 		//------------
 	}
 
@@ -1631,6 +1639,75 @@ class KnightTour {
 			return false;
 	}
 	
+}
+
+class MazeSolver {
+	
+	private int [][] maze;
+	private int [][] path;
+	
+	// Arrays to hold the next steps
+	int[] movX = {1, 0, -1, 0};
+	int[] movY = {0, 1, 0, -1};
+
+	// Store the input maze and initialize the path matrix
+	public MazeSolver(int [][] maze) {
+		this.maze = maze;
+		path = new int[maze.length][maze.length];
+	}
+	
+	// Helper function to print the path
+	public void printPath(int startX, int startY, int endX, int endY) {
+		path [startX][startY] = 1;
+		if (findPath(startX, startY, endX, endY)) {
+			for (int i = 0; i < maze.length; i++) {
+				for (int j = 0; j < maze.length; j++) {
+					System.out.printf("%4d", path[i][j]);
+				}
+				System.out.printf("\n");
+			}
+		}
+		else
+			System.out.println("No Path exists!");
+			
+	}
+	
+	// Main recursive function that does all the work
+	private boolean findPath(int curX, int curY, int endX, int endY) {
+		//Base case - Check if we have already reached our goal
+		if ((curX == endX) && (curY == endY))
+			return true;
+		
+		// Iterate over all the next possible 1 step
+		// away blocks to find the valid one
+		for (int i = 0; i < movX.length; i++) {
+			//Compute the newX and newY
+			int newX = curX + movX[i];
+			int newY = curY + movY[i];
+			
+			//Check if valid
+			if (isValid(newX, newY)) {
+				//If valid mark the block as visited
+				path[newX][newY] = 1;
+				//Recursively check for the next step 
+				if (findPath(newX, newY, endX, endY))
+					return true;
+				//If no next step possible backtrack.
+				path[newX][newY] = 0;
+			}
+		}
+		return false;
+	}
+	
+	//Valid check - if within the maze and not visited and is not a barrier
+	private boolean isValid(int x, int y) {
+		if ((x < 0) || (x >= maze.length)) return false;
+		if ((y < 0) || (y >= maze.length)) return false;
+		if (maze[x][y] == 0) return false;
+		if (path[x][y] == 1) return false;
+		
+		return true;
+	}
 }
 
 //------------------------

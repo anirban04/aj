@@ -110,7 +110,34 @@ public class App {
 		
 		//System.out.println(longestPalindrome("aaaabaaa"));
 		//System.out.println(convert("ABCDEFG", 3));
-		nQueens(29);
+		//nQueens(29);
+		
+		//------------
+		/*int [][] graphAdjMat = {{0, 1, 1, 1},
+					   			{1, 0, 1, 0},
+					   			{1, 1, 0, 1},
+					   			{1, 0, 1, 0}};
+		GraphColor graphColor = new GraphColor(graphAdjMat, 3); 
+		
+		if (!graphColor.colorGraph())
+			System.out.println("Cannot Color the graph");
+		else {
+			System.out.println("Colors are: ");
+			for (int i = 0; i < graphColor.numVertices; i++)
+				System.out.printf("%d ",graphColor.color[i]);
+			System.out.printf("\n");
+		}
+		*/
+		KnightTour knighttour = new KnightTour(8);
+		int [][] sol = knighttour.getKnightsPath();
+		
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				System.out.printf("%4d", sol[i][j]);
+			}
+			System.out.printf("\n");
+		}
+		//------------
 	}
 
 	/* Each pair of 2 and 5 will cause a trailing zero.
@@ -1480,10 +1507,135 @@ public class App {
 		else
 			System.out.println("Solution not found.");
 	}
-	
-//------------------------
-
 }   
+
+class GraphColor {
+	
+	int [][] graphAdjMat;
+	int[] color;
+	int numVertices;
+	int numColors;
+	boolean graphColored;
+	
+	
+	public GraphColor(int[][] graphAdjMat, int numColors) {
+		this.graphAdjMat = graphAdjMat;
+		this.numVertices = graphAdjMat.length;
+		this.color = new int[this.numVertices];
+		this.numColors = numColors;	
+		this.graphColored = false;
+	}
+	
+	public boolean colorGraph() {
+		solve(0);
+		return this.graphColored;
+	}
+	
+	//This is the main helper method that solves the coloring problem
+	private void solve(int vertexIdx) {
+		//Base case - return if we have colored all vertices
+		if (vertexIdx == numVertices) {
+			this.graphColored = true;
+			return;
+		}
+		
+		//For a given vertex, iterate through all colors to find the first one that is Valid
+		for (int i = 1; i <= numColors; i++) {
+			if (isColorValid(vertexIdx, i)) {
+				//Assign color to vertex
+				color[vertexIdx] = i;
+				//Recursively color the next vertex
+				solve(vertexIdx + 1);
+			}	
+		}
+	}
+	
+	//Helper function to check if a color is valid
+	private boolean isColorValid(int vertexIdx, int toColor) {
+		for (int i = 0; i < numVertices; i++) {
+			//Check if a neighbor has the same color assigned
+			if (graphAdjMat[vertexIdx][i] == 1 && (color[i] == toColor))
+				return false;
+		}
+		return true;
+	}
+}
+
+class KnightTour {
+	
+	private int [][] solMatrix;
+	// Initialize the X and Y directions in 
+	// which the knight can move in one move
+	int[] xMove = {1, 2, 2, 1, -1, -2, -2, -1};
+	int[] yMove = {2, 1, -1, -2, -2, -1, 1, 2};
+	int boardSize;
+	
+	//Initialize the solution matrix with all -1s
+	KnightTour(int boardSize) {
+		solMatrix = new int [boardSize][boardSize];
+		this.boardSize = boardSize;
+		initSolMatrix();
+	}
+
+	private void initSolMatrix() {
+		for (int i = 0; i < boardSize; i++) {
+			for (int j = 0; j < boardSize; j++) {
+				solMatrix[i][j] = -1;
+			}
+		}
+	}
+
+	// Public function that is called to get the path
+	public int[][] getKnightsPath() {
+		// Start at the top left corner of the board
+		solMatrix[0][0] = 0;
+		if (!solve(1, 0, 0))
+			System.out.println("No path Exists.");
+		return solMatrix;
+	}
+	
+	private boolean solve(int stepNum, int curX, int curY) {
+		int newX, newY;
+		
+		//Base case - if have covered all 
+		if (stepNum == boardSize * boardSize)
+			return true;
+		
+		//For a given box find the next valid box by
+		//iterating thru the set of valid moves 
+		for (int i = 0; i < xMove.length; i++) {
+			// Find the next possible position
+			newX = curX + xMove[i];
+			newY = curY + yMove[i];
+			
+			//Check if its valid
+			if (validBox(newX, newY)) {
+				//If Valid assign the stepNum to the pos
+				solMatrix[newX][newY] = stepNum;
+				// Call recursively for the next step
+				if (solve(stepNum + 1, newX, newY))
+					return true;
+				//If next step fails we backtrack
+				solMatrix[newX][newY] = -1;
+			}
+		}
+		return false;
+	}
+	
+	private boolean validBox(int x, int y) {
+		//Check if the position is inside the board and not previously visited
+		if ((x >= 0 && x < this.boardSize) && 
+			(y >= 0 && y < this.boardSize) && 
+			(solMatrix[x][y]  == -1)) {
+			return true;
+		}
+		else 
+			return false;
+	}
+	
+}
+
+//------------------------
 
 class Interval implements Comparable<Interval> {
 	int start;

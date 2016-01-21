@@ -110,7 +110,7 @@ public class App {
 		
 		//System.out.println(longestPalindrome("aaaabaaa"));
 		//System.out.println(convert("ABCDEFG", 3));
-		//nQueens(29);
+		nQueens(29);
 		
 		//------------
 		/*int [][] graphAdjMat = {{0, 1, 1, 1},
@@ -127,7 +127,7 @@ public class App {
 				System.out.printf("%d ",graphColor.color[i]);
 			System.out.printf("\n");
 		}
-		*/
+		
 		KnightTour knighttour = new KnightTour(8);
 		int [][] sol = knighttour.getKnightsPath();
 		
@@ -136,7 +136,7 @@ public class App {
 				System.out.printf("%4d", sol[i][j]);
 			}
 			System.out.printf("\n");
-		}
+		}*/
 		//------------
 	}
 
@@ -1437,7 +1437,7 @@ public class App {
 	}
 //------------------------
 	private static boolean isBoxValid(int [][] board, 
-			int row, int col, int boardSize) {
+			int row, int col) {
 		
 		// We place a new queen to the right (next col) of an older queen, 
 		// and also in one column, we only place a single queen. So the
@@ -1455,7 +1455,7 @@ public class App {
 				return false;
 		}
 		//Check for any elements on diagonal down left
-		for (int i = row, j = col; i < boardSize  && j>=0; i++, j--) {
+		for (int i = row, j = col; i < board.length  && j>=0; i++, j--) {
 			if (board[i][j] == 1)
 				return false;
 		}
@@ -1463,19 +1463,19 @@ public class App {
 		return true;
 	}
 	
-	private static boolean placeQueens(int [][] board, int col, int boardSize) {
+	private static boolean placeQueens(int [][] board, int col) {
 		
 		// Base case for recursion to break. if 
 		// we have reached the end of the board.
-		if (col >= boardSize)
+		if (col >= board.length)
 			return true;
 		//For the given input col, iterate over all the rows to find a right box
-		for (int i = 0; i < boardSize; i++) {
-			if (isBoxValid(board, i, col, boardSize)) {
+		for (int i = 0; i < board.length; i++) {
+			if (isBoxValid(board, i, col)) {
 				// If a valid box is found place a queen there
 				board[i][col] = 1;
 				// Then call recursively for next col
-				if (placeQueens(board, col+1, boardSize))
+				if (placeQueens(board, col+1))
 					return true;
 				//This is where we backtrack
 				board[i][col] = 0;
@@ -1501,7 +1501,7 @@ public class App {
 		int [][] board = new int[numQueens][numQueens];
 		
 		//place all the queens
-		if (placeQueens(board, 0, numQueens))
+		if (placeQueens(board, 0))
 			//print the placement
 			printPlacement(board, numQueens);
 		else

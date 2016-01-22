@@ -137,14 +137,18 @@ public class App {
 			}
 			System.out.printf("\n");
 		}*/
-		
+		/*
 		int [][] maze = {{1, 1, 1, 1},
 	   					 {0, 0, 1, 0},
 	   					 {1, 0, 1, 1},
 	   					 {1, 1, 1, 0}};
 		MazeSolver mSol = new MazeSolver(maze);
 		mSol.printPath(0, 0, 2, 0);
+		*/
 		
+		FibonacciSolver fibSolv = new FibonacciSolver();
+		//System.out.println(fibSolv.solveNaive(40));
+		System.out.println(fibSolv.solveDP(40));
 		//------------
 	}
 
@@ -1711,6 +1715,44 @@ class MazeSolver {
 }
 
 //------------------------
+
+class FibonacciSolver {
+	
+	//Hash map to store the already computed values
+	private Map<Double, Double> memoize;
+	
+	public FibonacciSolver() {
+		//Initialize the hash map
+		memoize = new HashMap<Double, Double>();
+		//Add the corner cases i.e. fib(0) and fib(1)
+		memoize.put(0.0, 0.0);
+		memoize.put(1.0, 1.0);
+	}
+	
+	public int solveNaive(int n) {
+		if (n == 0) return 0;
+		if (n == 1) return 1;
+		
+		else return solveNaive(n - 1) + solveNaive(n - 2);
+	}
+	
+	public double solveDP(double n) {
+		if (memoize.containsKey(n))
+			return memoize.get(n);
+		
+		// Recursively call to compute fib(n - 1) and add to map
+		memoize.put(n - 1, solveDP(n - 1));
+		// Recursively call to compute fib(n - 2) and add to map
+		memoize.put(n - 2, solveDP(n - 2));
+		
+		// fib(n)  = fib(n - 1) + fib(n - 2)
+		double fibVal = memoize.get(n - 1) + memoize.get(n - 2);
+		//Add result to map and return sesult.
+		memoize.put(n, fibVal);
+		return fibVal;
+		
+	}
+}
 
 class Interval implements Comparable<Interval> {
 	int start;

@@ -146,9 +146,14 @@ public class App {
 		mSol.printPath(0, 0, 2, 0);
 		*/
 		
-		FibonacciSolver fibSolv = new FibonacciSolver();
+		//FibonacciSolver fibSolv = new FibonacciSolver();
 		//System.out.println(fibSolv.solveNaive(40));
-		System.out.println(fibSolv.solveDP(40));
+		//System.out.println(fibSolv.solveDP(40));
+		
+		CoinChange cc = new CoinChange();
+		int[] v = {1, 2, 3};
+		//System.out.println(cc.recSol(5, v , 0));
+		System.out.println(cc.dpSol(5, v));
 		//------------
 	}
 
@@ -1715,6 +1720,45 @@ class MazeSolver {
 }
 
 //------------------------
+class CoinChange {
+	public int recSol(int m, int[] v, int index) {
+		if (m < 0) return 0;
+		if (m == 0) return 1;
+		
+		if (index == v.length) return 0;
+		return recSol(m - v[index], v, index) + recSol(m, v, index + 1); 
+	}
+	
+	public int dpSol(int m, int[] v) {
+		int [][] dpTable = new int [v.length + 1][m + 1];
+		
+		// Case of total = 0
+		for (int i = 0; i <= v.length; i++)
+			dpTable[i][0] = 1;
+		
+		// Case of number of coins = 0
+		for (int j = 0; j <= m; j++)
+			dpTable[0][j] = 0;
+		
+		
+		
+		for (int i = 1; i <= v.length; i++) {
+			for (int j = 1; j <= m; j++) {
+				// Case of Coin denomination being lower than total
+				if (v[i - 1] <= j) {
+					dpTable[i][j] = dpTable[i - 1][j] + dpTable[i][j - v[i - 1]];
+				}
+				// Case of coin denomination being greater than the total
+				else {
+					dpTable[i][j] = dpTable[i - 1][j];
+				}
+			}
+		}
+		
+		return dpTable[v.length][m];
+	}
+}
+
 
 class FibonacciSolver {
 	
@@ -1747,7 +1791,7 @@ class FibonacciSolver {
 		
 		// fib(n)  = fib(n - 1) + fib(n - 2)
 		double fibVal = memoize.get(n - 1) + memoize.get(n - 2);
-		//Add result to map and return sesult.
+		//Add result to map and return result.
 		memoize.put(n, fibVal);
 		return fibVal;
 		

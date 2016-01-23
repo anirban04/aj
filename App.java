@@ -150,10 +150,14 @@ public class App {
 		//System.out.println(fibSolv.solveNaive(40));
 		//System.out.println(fibSolv.solveDP(40));
 		
-		CoinChange cc = new CoinChange();
-		int[] v = {1, 2, 3};
+		//CoinChange cc = new CoinChange();
+		//int[] v = {1, 2, 3};
 		//System.out.println(cc.recSol(5, v , 0));
-		System.out.println(cc.dpSol(5, v));
+		//System.out.println(cc.dpSol(5, v));
+		
+		RodCutter rc = new RodCutter();
+		int[] prices = {2, 5, 7, 3};
+		System.out.println(rc.getMaxProfit(prices, 25));
 		//------------
 	}
 
@@ -1720,6 +1724,28 @@ class MazeSolver {
 }
 
 //------------------------
+class RodCutter {
+	public int getMaxProfit(int[] prices, int maxLength) {
+		//Create the DP table. It is automatically initialized to all 0s
+		int [][] dptable = new int[prices.length + 1] [maxLength + 1];
+		
+		// Fill up the table iterating from 1 till size in both row and col
+		for (int i = 1; i <= prices.length; i++) {
+			for (int j = 1; j <= maxLength; j++) {
+				if (i > j) {
+					dptable[i][j] = dptable[i - 1][j];
+				}
+				else {
+					dptable[i][j] = Math.max(dptable[i - 1][j], prices[i - 1] + dptable[i][j - i]);
+				}
+			}
+		}
+		//Return max row:col value
+		return dptable[prices.length][maxLength];
+	}
+}
+
+
 class CoinChange {
 	public int recSol(int m, int[] v, int index) {
 		if (m < 0) return 0;
@@ -1741,7 +1767,7 @@ class CoinChange {
 			dpTable[0][j] = 0;
 		
 		
-		
+		// Fill up the table iterating from 1 till size in both row and col
 		for (int i = 1; i <= v.length; i++) {
 			for (int j = 1; j <= m; j++) {
 				// Case of Coin denomination being lower than total
@@ -1754,11 +1780,10 @@ class CoinChange {
 				}
 			}
 		}
-		
+		//Return max row:col value
 		return dpTable[v.length][m];
 	}
 }
-
 
 class FibonacciSolver {
 	

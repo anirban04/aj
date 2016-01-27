@@ -154,10 +154,17 @@ public class App {
 		//int[] v = {1, 2, 3};
 		//System.out.println(cc.recSol(5, v , 0));
 		//System.out.println(cc.dpSol(5, v));
-		
+		/*
 		RodCutter rc = new RodCutter();
 		int[] prices = {2, 5, 7, 3};
 		System.out.println(rc.getMaxProfit(prices, 25));
+		*/
+		
+		KnapsackSolver ks = new KnapsackSolver();
+		int[] weight = {4, 2, 3, 5, 3, 2, 6, 10, 7};
+		int[] value =  {10, 4, 7, 8, 9, 8, 10, 12, 4};
+		System.out.println(ks.getMaxValue(weight, value, 100));
+		
 		//------------
 	}
 
@@ -1724,6 +1731,30 @@ class MazeSolver {
 }
 
 //------------------------
+
+class KnapsackSolver {
+	public int getMaxValue(int[]weight, int[] value, int maxWeight) {
+		//Create the DP table. It is automatically initialized to all 0s 
+		int [][] dptable = new int[value.length + 1] [maxWeight + 1];
+		
+		// Fill up the table iterating from 1 till size in both row and col
+		for (int i = 1; i <=value.length ; i++) {
+			for (int j = 1; j <=maxWeight ; j++) {
+				int temp;
+				//Handle the case of out of bounds access of dpTable 
+				if (j - weight[i - 1] < 0)
+					temp = 0;
+				else
+					temp = value[i - 1] + dptable[i - 1][j - weight[i - 1]];
+
+				dptable[i][j] = Math.max(dptable[i - 1][j], temp);
+			}
+		}
+		//Return max row:col value
+		return dptable[value.length][maxWeight];
+	}
+}
+
 class RodCutter {
 	public int getMaxProfit(int[] prices, int maxLength) {
 		//Create the DP table. It is automatically initialized to all 0s

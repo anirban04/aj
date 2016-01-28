@@ -150,21 +150,26 @@ public class App {
 		//System.out.println(fibSolv.solveNaive(40));
 		//System.out.println(fibSolv.solveDP(40));
 		
-		//CoinChange cc = new CoinChange();
-		//int[] v = {1, 2, 3};
-		//System.out.println(cc.recSol(5, v , 0));
-		//System.out.println(cc.dpSol(5, v));
+		/*CoinChange cc = new CoinChange();
+		int[] v = {1, 5, 6, 8};
+		System.out.println(cc.recSol(5, v , 0));
+		System.out.println(cc.dpSol(11, v));
+		*/
+		
 		/*
 		RodCutter rc = new RodCutter();
 		int[] prices = {2, 5, 7, 3};
 		System.out.println(rc.getMaxProfit(prices, 25));
 		*/
 		
-		KnapsackSolver ks = new KnapsackSolver();
+		/*KnapsackSolver ks = new KnapsackSolver();
 		int[] weight = {4, 2, 3, 5, 3, 2, 6, 10, 7};
 		int[] value =  {10, 4, 7, 8, 9, 8, 10, 12, 4};
 		System.out.println(ks.getMaxValue(weight, value, 100));
+		*/
 		
+		EggDropper ed = new EggDropper();
+		System.out.println(ed.getNumTries(2, 100));
 		//------------
 	}
 
@@ -1732,6 +1737,39 @@ class MazeSolver {
 
 //------------------------
 
+class EggDropper {
+	public int getNumTries(int eggs, int floors) {
+		
+		int [][] dpTable = new int[eggs + 1] [floors + 1];
+		
+		//set all the elements of i = 1 to j
+		for (int j = 1; j <= floors; j++) {
+			dpTable[1][j] = j;
+		}
+		
+		// Fill up the table till size in both row and col
+		for (int i = 2; i <= eggs; i++) {
+			for (int j = 1; j <= floors; j++) {
+				if (i > j) {
+					dpTable[i][j] = dpTable[i - 1][j];
+				}
+				else {
+					List<Integer> numTries = new ArrayList<Integer>();
+					for (int k = 1; k <= j; k++){
+						numTries.add(Math.max(dpTable[i - 1][k - 1], dpTable[i][j - k]));
+					}
+					
+					Collections.sort(numTries);
+					dpTable[i][j] = 1 + numTries.get(0);
+				}
+			}
+		}
+		
+		//Return max row:col value
+		return dpTable[eggs][floors];
+	}
+}
+
 class KnapsackSolver {
 	public int getMaxValue(int[]weight, int[] value, int maxWeight) {
 		//Create the DP table. It is automatically initialized to all 0s 
@@ -1811,6 +1849,7 @@ class CoinChange {
 				}
 			}
 		}
+		
 		//Return max row:col value
 		return dpTable[v.length][m];
 	}

@@ -168,8 +168,13 @@ public class App {
 		System.out.println(ks.getMaxValue(weight, value, 100));
 		*/
 		
-		EggDropper ed = new EggDropper();
+		/*EggDropper ed = new EggDropper();
 		System.out.println(ed.getNumTries(2, 100));
+		*/
+		
+		SubsetSum ss = new SubsetSum();
+		int[] set = {2, -3, -7, 8, 10};
+		System.out.println(ss.solve(set, 1));
 		//------------
 	}
 
@@ -1736,6 +1741,42 @@ class MazeSolver {
 }
 
 //------------------------
+
+class SubsetSum {
+	public boolean solve(int[] set, int sum) {
+		boolean [][] dpTable = new boolean[set.length + 1] [sum + 1];
+		
+		//Populate dpTable[i][0] = true;
+		for (int i = 0; i <= set.length; i++) {
+			dpTable[i][0] = true;
+		}
+		
+		//Populate dpTable[1][j]
+		for (int j = 1; j <= sum; j++) {
+			if (set[0] == j)
+				dpTable[1][j] = true;
+		}
+		
+		// Fill up the table till size in both row and col
+		for (int i = 2; i <= set.length; i++) {
+			for (int j = 1; j <= sum; j++) {
+				if (set[i - 1] > j)
+					dpTable[i][j] = dpTable[i - 1][j];
+				else {
+					if (dpTable[i - 1][j])
+						dpTable[i][j] = true;
+					else
+						//Check for j - set[i - 1] <= sum
+						if (j - set[i - 1] <= sum)
+							dpTable[i][j] = dpTable[i - 1][j - set[i - 1]];
+				}
+			}
+		}
+		
+		//Return max row:col value
+		return dpTable[set.length][sum];
+	}
+}
 
 class EggDropper {
 	public int getNumTries(int eggs, int floors) {

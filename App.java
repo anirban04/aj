@@ -178,7 +178,8 @@ public class App {
 		System.out.println(ss.solve(set, 1));
 		*/
 		
-		System.out.println(lengthLonComSubSeq("abcdaf", "abdaf"));
+		//System.out.println(lengthLonComSubSeq("abcdaf", "abdaf"));
+		System.out.println(lengthLonComSubStr("abcdaf", "abdaf"));
 		//------------
 	}
 
@@ -1567,6 +1568,26 @@ public class App {
 		}
 		//Return max row:col value
 		return dpTable[s1.length()][s2.length()];
+	}
+	
+	private static int lengthLonComSubStr(String s1, String s2) {
+		int [][] dpTable = new int[s1.length() + 1][s2.length() + 1];
+		int longestLen = 0;
+		
+		//Populate the table
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					dpTable[i][j] = 1 + dpTable[i - 1][j - 1];
+					longestLen = Math.max(longestLen, dpTable[i][j]);
+				}
+				else
+					dpTable[i][j] = 0;
+			}
+		}
+		
+		//Return max stored value
+		return longestLen;
 	}
 }   
 

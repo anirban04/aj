@@ -172,9 +172,13 @@ public class App {
 		System.out.println(ed.getNumTries(2, 100));
 		*/
 		
+		/*
 		SubsetSum ss = new SubsetSum();
 		int[] set = {2, -3, -7, 8, 10};
 		System.out.println(ss.solve(set, 1));
+		*/
+		
+		System.out.println(lengthLonComSubSeq("abcdaf", "abdaf"));
 		//------------
 	}
 
@@ -1544,6 +1548,25 @@ public class App {
 			printPlacement(board, numQueens);
 		else
 			System.out.println("Solution not found.");
+	}
+	
+	
+	private static int lengthLonComSubSeq(String s1, String s2) {
+		int [][] dpTable = new int[s1.length() + 1][s2.length() + 1];
+		
+		//Populate the table
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					dpTable[i][j] = 1 + dpTable[i - 1][j - 1]; 
+				}
+				else {
+					dpTable[i][j] = Math.max(dpTable[i - 1][j], dpTable[i][j - 1]);
+				}
+			}
+		}
+		//Return max row:col value
+		return dpTable[s1.length()][s2.length()];
 	}
 }   
 

@@ -179,7 +179,9 @@ public class App {
 		*/
 		
 		//System.out.println(lengthLonComSubSeq("abcdaf", "abdaf"));
-		System.out.println(lengthLonComSubStr("abcdaf", "abdaf"));
+		//System.out.println(lengthLonComSubStr("abcdaf", "abdaf"));
+		System.out.println(minEditDist("abcdef", "azced"));
+		
 		//------------
 	}
 
@@ -1551,6 +1553,35 @@ public class App {
 			System.out.println("Solution not found.");
 	}
 	
+	private static int minEditDist(String s1, String s2) {
+		int [][] dpTable = new int[s1.length() + 1][s2.length() + 1];
+	
+		//Initialize for row = 0
+		for (int i = 0; i <= s1.length(); i++) {
+			dpTable[i][0] = i;
+		}
+		
+		//Initialize for col = 0
+		for (int j = 0; j <= s2.length(); j++) {
+			dpTable[0][j] = j;
+		}
+		
+		//Populate the table
+		for (int i = 1; i <= s1.length(); i++) {
+			for (int j = 1; j <= s2.length(); j++) {
+				if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+					dpTable[i][j] = dpTable[i - 1][j - 1]; 
+				}
+				else {
+					int temp = Math.min(dpTable[i - 1][j], dpTable[i][j - 1]);
+					dpTable[i][j] = 1 + Math.min(dpTable[i - 1][j - 1], temp);
+				}
+			}
+		}
+
+		//Return max row:col value
+		return dpTable[s1.length()][s2.length()];
+	}
 	
 	private static int lengthLonComSubSeq(String s1, String s2) {
 		int [][] dpTable = new int[s1.length() + 1][s2.length() + 1];

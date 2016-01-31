@@ -180,7 +180,9 @@ public class App {
 		
 		//System.out.println(lengthLonComSubSeq("abcdaf", "abdaf"));
 		//System.out.println(lengthLonComSubStr("abcdaf", "abdaf"));
-		System.out.println(minEditDist("abcdef", "azced"));
+		//System.out.println(minEditDist("abcdef", "azced"));
+		
+		System.out.println(lonPalSubSeq("agbdba"));
 		
 		//------------
 	}
@@ -1481,6 +1483,34 @@ public class App {
 		return ret;
 	}
 //------------------------
+	
+	private static int lonPalSubSeq(String str) {
+		int [][] dpTable = new int[str.length()][str.length()];
+		
+		for (int i = 0; i < str.length(); i++) {
+			int j = i;
+			dpTable[i][j] = 1;
+		}
+		
+		for (int i = 0; i < str.length(); i++) {
+			for (int j = i + 1; j < str.length(); j++){
+				if (str.charAt(i) != str.charAt(j)) {
+					dpTable[i][j] = Math.max(dpTable[i][j - 1], dpTable[i + 1][j]);
+				}
+				else {
+					int temp = 0;
+					if ((j - i) > 1) {
+						temp = dpTable[i + 1][j - 1];
+					}
+					dpTable[i][j] = 2 + temp;
+				}
+			}
+		}
+		
+		return dpTable[0][str.length() - 1];
+	}
+	
+	
 	private static boolean isBoxValid(int [][] board, 
 			int row, int col) {
 		

@@ -182,11 +182,34 @@ public class App {
 		//System.out.println(lengthLonComSubStr("abcdaf", "abdaf"));
 		//System.out.println(minEditDist("abcdef", "azced"));
 		
-		System.out.println(lonPalSubSeq("agbdba"));
+		//System.out.println(lonPalSubSeq("agbdba"));
+		System.out.println(isPalinRec(""));
 		
 		//------------
 	}
 
+	private static boolean isPalinRec(String str) {
+		if (str.length() == 1)
+			return true;
+		
+		if (str.length() == 0)
+			return false;
+
+		return isPal(str, 0, str.length() - 1);
+	}
+	
+	private static boolean isPal(String str, int start, int end) {
+		//Base case
+		if (start >= end)
+			return true;
+		
+		if (str.charAt(start) != str.charAt(end))
+			return false;
+		else 
+			return isPal(str, start + 1, end - 1);
+		
+	}
+	
 	/* Each pair of 2 and 5 will cause a trailing zero.
 	 *  Since we have only 24 5’s, we can only make 24 
 	 *  pairs of 2’s and 5’s thus the number of 

@@ -127,7 +127,7 @@ public class App {
 				System.out.printf("%d ",graphColor.color[i]);
 			System.out.printf("\n");
 		}
-		
+		*/
 		KnightTour knighttour = new KnightTour(8);
 		int [][] sol = knighttour.getKnightsPath();
 		
@@ -136,7 +136,7 @@ public class App {
 				System.out.printf("%4d", sol[i][j]);
 			}
 			System.out.printf("\n");
-		}*/
+		}
 		/*
 		int [][] maze = {{1, 1, 1, 1},
 	   					 {0, 0, 1, 0},
@@ -183,10 +183,58 @@ public class App {
 		//System.out.println(minEditDist("abcdef", "azced"));
 		
 		//System.out.println(lonPalSubSeq("agbdba"));
-		System.out.println(isPalinRec(""));
+		//System.out.println(isPalinRec(""));
+		//nqClass(5);
 		
 		//------------
 	}
+	//-----------------------------------------------------------------------------
+	//Stuff from class
+	private static void nqClass(int queens) {
+		int []arr = {0, 1, 2, 3, 4};
+		printPerms(arr, 0);
+	}
+	
+	static void printPerms(int [] arr, int p) {
+		//Trimming code can be put here.
+			
+			if (p == arr.length) {
+				printPerm(arr);
+				return;
+			}
+			for (int i = p; i < arr.length; i++) {
+				swap(arr, i, p);
+				if (isValid(arr, i)) {
+					printPerms(arr, p + 1);
+					swap(arr , i, p);
+				}
+			}
+		}
+	
+	private static boolean isValid(int[] arr, int pos) {
+		for (int i = 0; i < pos; ++i) {
+			if ((pos - i) == arr[pos] - arr[i])
+					return false;
+			if ((pos - i) == arr[i] - arr[pos])
+				return false;
+		}
+		return true;
+	}
+
+	private static void swap(int[] arr, int i1, int i2) {
+		int temp = arr[i1];
+		arr[i1] = arr[i2];
+		arr [i2] = temp;
+	}
+	
+	private static void printPerm(int [] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			System.out.println(arr[i]);
+		}
+	}
+	
+	//-----------------------------------------------------------------------------
+	
 
 	private static boolean isPalinRec(String str) {
 		if (str.length() == 1)

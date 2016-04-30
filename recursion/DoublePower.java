@@ -2,21 +2,26 @@ package recursion;
 
 public class DoublePower {
 	public static void main(String[] args) {
-		System.out.println(pow(3, 2));
+		System.out.println(myPow(2, 500));
 	}
-	
-	private static double pow(double base, double pow) {
-		if (pow < 0)
-			return 1/_pow(base, pow * -1);
-		else
-			return _pow(base, pow * 1);
-	}
-	
-	private static double _pow(double base, double pow) {
-		if (pow <= 0) {
-			return 1;
-		}
-		
-		return base * (_pow (base , pow - 1.0));
-	}
+
+    public static double myPow(double x, int n) {
+        if (n >= 0)
+            return _myPow(x, n);
+        else
+            return 1/_myPow(x, -n);
+    }
+    
+    private static double _myPow(double x, int n){
+        if (n == 0)
+            return 1;
+            
+        double v = _myPow(x, n/2);
+        
+        if (n % 2 == 0)
+            return v * v;
+        else
+            return v * v * x;
+    }
 }
+

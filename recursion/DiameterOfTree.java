@@ -1,6 +1,9 @@
 package recursion;
 import java.util.*;
 
+/* Calculate the diameter of a tree (not necessarily a binary tree). Diameter
+ * is the longest path between two leaves of a tree. A path is the sum total 
+ * of all distances (weights) attached to all edges between two nodes. */
 public class DiameterOfTree {
 
 	public static void main (String[] args) {

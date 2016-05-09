@@ -2,7 +2,7 @@ package recursion;
 
 public class DoublePower {
 	public static void main(String[] args) {
-		System.out.println(myPow(2, 500));
+		System.out.println(myPow(2, 4));
 	}
 
     public static double myPow(double x, int n) {
@@ -15,6 +15,9 @@ public class DoublePower {
     private static double _myPow(double x, int n){
         if (n == 0)
             return 1;
+        
+        if (n == 1)
+            return x;
             
         double v = _myPow(x, n/2);
         

@@ -247,11 +247,12 @@ public class AllTreeAlgos {
 		if (low == high)
 			return new TreeNode(res.get(low));
 		
-		int mid  = low + (high - low) / 2;
-		TreeNode n = new TreeNode(res.get(mid));
-		n.left = buildTree(res, low, mid - 1);
-		n.right = buildTree(res, mid + 1, high);
-		return n;
+		int mid = low + ((high - low) / 2);
+		TreeNode node = new TreeNode(res.get(mid));
+		node.left = buildTree(res, low, mid - 1);
+		node.right = buildTree(res, mid + 1, high);
+		
+		return node;
 			
 	}
 	
